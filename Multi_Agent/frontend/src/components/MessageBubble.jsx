@@ -7,6 +7,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 function MessageBubble({ role, content, images }) {
   const isUser = role === "user"
+  const imageList = Array.isArray(images) ? images : []
   const [lightBox, setLightBox] = useState(null)
   const [copiedCode, setCopiedCode] = useState("")
 
@@ -31,9 +32,9 @@ function MessageBubble({ role, content, images }) {
         }`}>
 
 
-        {images.length > 0 && (
+        {imageList.length > 0 && (
           <div className='flex flex-wrap gap-3 mt-4'>
-            {images.map((img, i) => (
+            {imageList.map((img, i) => (
               <img
                 key={i}
                 src={img}

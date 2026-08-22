@@ -10,13 +10,13 @@ const messageSlice=createSlice({
     },
     reducers:{
        setMessages:(state,action)=>{
-        state.messages=action.payload
+        state.messages=Array.isArray(action.payload) ? action.payload : []
        },
         addMessage:(state,action)=>{
         state.messages.push(action.payload)
        },
        setArtifacts:(state,action)=>{
-        state.artifacts=action.payload
+        state.artifacts=Array.isArray(action.payload) ? action.payload : []
        },
        setIsLoading:(state,action)=>{
         state.isLoading=action.payload

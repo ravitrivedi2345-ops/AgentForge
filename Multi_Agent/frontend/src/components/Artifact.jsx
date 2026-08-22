@@ -14,10 +14,11 @@ function Artifact() {
 
 
 
-  const file = artifacts[0]?.files[activeFile]
-  const htmlFile = artifacts[0]?.files?.find(f => f.name == "index.html")
-  const cssFile = artifacts[0]?.files?.find(f => f.name == "style.css")
-  const jsFile = artifacts[0]?.files?.find(f => f.name == "script.js")
+  const files = Array.isArray(artifacts[0]?.files) ? artifacts[0].files : []
+  const file = files[activeFile]
+  const htmlFile = files.find(f => f.name == "index.html")
+  const cssFile = files.find(f => f.name == "style.css")
+  const jsFile = files.find(f => f.name == "script.js")
 
   const canPreview = Boolean(htmlFile)
 
@@ -133,7 +134,7 @@ function Artifact() {
           </div>
           {tab === "code" && <div className='flex h-auto border-b border-white/[0.06] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden shrink-0'>
             {
-              artifacts[0]?.files?.map((f, index) => (
+              files.map((f, index) => (
                 <button
                   onClick={() => setActiveFile(index)}
                   className={`px-4 py-2.5 text-[11px] font-medium whitespace-nowrap transition-colors duration-150 border-r border-white/[0.05] relative cursor-pointer bg-transparent   ${activeFile === index ? "text-indigo-400" : "text-slate-500 hover:text-slate-300"}`}
