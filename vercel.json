@@ -1,6 +1,6 @@
 {
 	"framework": "vite",
-	"buildCommand": "npm install --prefix Multi_Agent/frontend && npm run build --prefix Multi_Agent/frontend",
+	"buildCommand": "npm install --prefix Multi_Agent/frontend && npm install --prefix Multi_Agent/backend/gateway && npm run build --prefix Multi_Agent/frontend",
 	"outputDirectory": "Multi_Agent/frontend/dist",
 	"rewrites": [
 		{

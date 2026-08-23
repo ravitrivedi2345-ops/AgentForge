@@ -26,6 +26,10 @@ app.get("/",(req,res)=>{
     res.json({message:"hello from gateway v5"})
 })
 
-app.listen(port,()=>{
-    console.log(`gateway started at ${port}`)
-})
+if (process.env.VERCEL !== "1") {
+    app.listen(port,()=>{
+        console.log(`gateway started at ${port}`)
+    })
+}
+
+export default app
