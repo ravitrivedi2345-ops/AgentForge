@@ -1,10 +1,19 @@
 {
 	"framework": "vite",
-	"buildCommand": "npm install --prefix Multi_Agent/frontend && npm install --prefix Multi_Agent/backend/gateway && npm run build --prefix Multi_Agent/frontend",
+	"buildCommand": "npm install --prefix Multi_Agent/frontend && npm install --prefix Multi_Agent/backend && npm install --prefix Multi_Agent/backend/gateway && npm run build --prefix Multi_Agent/frontend",
 	"outputDirectory": "Multi_Agent/frontend/dist",
+	"functions": {
+		"api/index.js": {
+			"maxDuration": 60
+		}
+	},
 	"rewrites": [
 		{
-			"source": "/(.*)",
+			"source": "/api/:path*",
+			"destination": "/api"
+		},
+		{
+			"source": "/((?!api(?:/|$)).*)",
 			"destination": "/index.html"
 		}
 	]
