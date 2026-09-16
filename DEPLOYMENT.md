@@ -1,6 +1,10 @@
 # Vercel deployment
 
-Set the Vercel project root to the repository root (`AgentForge`). The existing `vercel.json` builds the Vite client and exposes the Express gateway at `/api`.
+Set the Vercel project **Root Directory** to `.` (the repository root, `AgentForge`). Do not set it to `Multi_Agent/backend` or `Multi_Agent/frontend`; both applications are needed by the root `vercel.json`.
+
+In Vercel: **Project Settings -> Build and Deployment -> Root Directory -> Edit -> `.`**, then redeploy. The existing `vercel.json` builds the Vite client and exposes the Express gateway at `/api`.
+
+If the build log contains a path such as `/Multi_Agent/backend/Multi_Agent/frontend/package.json`, the Root Directory is still set incorrectly.
 
 Required Vercel environment variables:
 
