@@ -39,10 +39,11 @@ export const login = async (req, res) => {
 
 
 
+        const isProd = process.env.NODE_ENV === "production" || process.env.RENDER === "true" || true
         res.cookie("session", sessionId, {
             httpOnly: true,
-            secure: false,
-            sameSite: "strict",
+            secure: isProd,
+            sameSite: isProd ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -59,7 +60,12 @@ export const logOut = async (req, res) => {
         const sessionId = req.cookies?.session
         await redis.del(`session-${sessionId}`)
 
-        res.clearCookie("session")
+        const isProd = process.env.NODE_ENV === "production" || process.env.RENDER === "true" || true
+        res.clearCookie("session", {
+            httpOnly: true,
+            secure: isProd,
+            sameSite: isProd ? "none" : "lax"
+        })
         return res.status(200).json({ message: "logout successfully" })
     } catch (error) {
         return res.status(500).json({ message: `logout error ${error}` })

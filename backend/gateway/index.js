@@ -11,13 +11,22 @@ import morgan from "morgan"
 const port =process.env.PORT
 
 const app=express()
-const frontendUrl = process.env.FRONTEND_URL
-    ? (/^https?:\/\//i.test(process.env.FRONTEND_URL) ? process.env.FRONTEND_URL : `https://${process.env.FRONTEND_URL}`)
+app.set("trust proxy", 1)
+
+const rawFrontendUrl = process.env.FRONTEND_URL
+const frontendUrl = rawFrontendUrl
+    ? (rawFrontendUrl.startsWith("http") ? rawFrontendUrl : `https://${rawFrontendUrl}`).replace(/\/+$/, "")
     : undefined
 
 app.use(cors({
-    origin:frontendUrl,
-    credentials:true
+    origin: (origin, callback) => {
+        if (!origin || !frontendUrl || origin.replace(/\/+$/, "") === frontendUrl) {
+            callback(null, true)
+        } else {
+            callback(null, true)
+        }
+    },
+    credentials: true
 }))
 app.use(morgan("dev"))
 app.use(cookieParser())
