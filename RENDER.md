@@ -1,8 +1,9 @@
 # Deploying AgentForge on Render
 
 The root `render.yaml` defines the gateway, auth, chat, agent, and billing web
-services plus the frontend static site. To create them, connect this repository
-to Render with **New > Blueprint** and select the repository.
+services. The Vite frontend is deployed separately on Vercel. To create the
+backend services, connect this repository to Render with **New > Blueprint**
+and select the repository.
 
 Before deploying, have these external services and credentials ready:
 
@@ -16,14 +17,21 @@ Before deploying, have these external services and credentials ready:
 - Qdrant `QDRANT_URL` and `QDRANT_API_KEY`, plus AWS S3 credentials and bucket
   settings if file uploads are enabled.
 - Razorpay test or live keys. Keep the secret key on billing only; the key ID
-  is also needed by the frontend.
+  is also needed by the frontend. Set `VITE_RAZORPAY_KEY_ID` in the Vercel
+  frontend project if billing is enabled.
 
 The Blueprint prompts for values marked `sync: false` when first created.
-When adding a new secret later, add it in the corresponding Render service's
-Environment settings. The frontend and gateway discover each other's Render
-hostnames through service references. Backend service URLs use Render's
-internal network on port 10000.
+Set `FRONTEND_URL` on `agentforge-gateway` to the Vercel frontend's production
+URL, without a trailing slash. When adding a new secret later, add it in the
+corresponding Render service's Environment settings. Backend service URLs use
+Render's internal network on port 10000.
 
-The included services use Render's free web/static plans. Free web instances
-can spin down while idle; they may have cold-start delays. MongoDB, Redis,
-Qdrant, and S3 are external dependencies and are not provisioned by this file.
+In Vercel, set `VITE_SERVER_URL` to the deployed gateway's public Render URL
+(for example, `https://agentforge-gateway.onrender.com`). Redeploy the Vercel
+frontend after changing environment variables. The backend's
+`FRONTEND_URL` must match the Vercel origin so gateway CORS allows browser
+requests.
+
+The included services use Render's free web plans. Free web instances can spin
+down while idle; they may have cold-start delays. MongoDB, Redis, Qdrant, and
+S3 are external dependencies and are not provisioned by this file.

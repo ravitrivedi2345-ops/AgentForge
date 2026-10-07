@@ -11,10 +11,7 @@ services:
       - key: PORT
         value: 10000
       - key: FRONTEND_URL
-        fromService:
-          type: web
-          name: agentforge-frontend
-          property: host
+        sync: false
       - key: AUTH_SERVICE
         value: http://agentforge-auth:10000
       - key: CHAT_SERVICE
@@ -116,19 +113,4 @@ services:
       - key: RAZORPAY_KEY_ID
         sync: false
       - key: RAZORPAY_KEY_SECRET
-        sync: false
-
-  - type: web
-    name: agentforge-frontend
-    runtime: static
-    rootDir: frontend
-    buildCommand: npm ci && npm run build
-    staticPublishPath: dist
-    envVars:
-      - key: VITE_SERVER_URL
-        fromService:
-          type: web
-          name: agentforge-gateway
-          property: host
-      - key: VITE_RAZORPAY_KEY_ID
         sync: false
