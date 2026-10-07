@@ -1,0 +1,135 @@
+services:
+  - type: web
+    name: agentforge-gateway
+    runtime: node
+    plan: free
+    rootDir: backend/gateway
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: agentforge-frontend
+          property: host
+      - key: AUTH_SERVICE
+        value: http://agentforge-auth:10000
+      - key: CHAT_SERVICE
+        value: http://agentforge-chat:10000
+      - key: AGENT_SERVICE
+        value: http://agentforge-agent:10000
+      - key: BILLING_SERVICE
+        value: http://agentforge-billing:10000
+      - key: REDIS_URL
+        sync: false
+
+  - type: web
+    name: agentforge-auth
+    runtime: node
+    plan: free
+    rootDir: backend/services/auth
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: FIREBASE_SERVICE_ACCOUNT
+        sync: false
+
+  - type: web
+    name: agentforge-chat
+    runtime: node
+    plan: free
+    rootDir: backend/services/chat
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+
+  - type: web
+    name: agentforge-agent
+    runtime: node
+    plan: free
+    rootDir: backend/services/agent
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: CHAT_SERVICE
+        value: http://agentforge-chat:10000
+      - key: AUTH_SERVICE
+        value: http://agentforge-auth:10000
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: AWS_REGION
+        sync: false
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_KEY
+        sync: false
+      - key: AWS_BUCKET_NAME
+        sync: false
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+
+  - type: web
+    name: agentforge-billing
+    runtime: node
+    plan: free
+    rootDir: backend/services/billing
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: AUTH_SERVICE
+        value: http://agentforge-auth:10000
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+
+  - type: web
+    name: agentforge-frontend
+    runtime: static
+    plan: free
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_SERVER_URL
+        fromService:
+          type: web
+          name: agentforge-gateway
+          property: host
+      - key: VITE_RAZORPAY_KEY_ID
+        sync: false
